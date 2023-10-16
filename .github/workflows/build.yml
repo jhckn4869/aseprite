@@ -70,29 +70,29 @@ jobs:
 
     - name: Generating Makefiles
 
-      外壳： bash
+      shell: bash
 
-      运行：|
+      run: |
 
-        if [[ "${{ runner.os }}" == "Windows" ]] ; 然后
+        if [[ "${{ runner.os }}" == "Windows" ]] ; then
 
-          导出enable_ccache=关闭
+          export enable_ccache=off
 
-        别的
+        else
 
-          导出enable_ccache=on
+          export enable_ccache=on
 
-        菲
+        fi
 
-        卷曲-L https://github.com/blueloveTH/aseprite/releases/download/v0.01/skia.zip --输出skia.zip
+        curl -L https://github.com/blueloveTH/aseprite/releases/download/v0.01/skia.zip --output skia.zip
 
-        7z x 滑雪.zip
+        7z x skia.zip
 
-        cmake -S 。-B 构建 -G 忍者 \
+        cmake -S . -B build -G Ninja \
 
-          -DCMAKE_BUILD_TYPE=${{matrix.build_type}}\
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
 
-          -DENABLE_UI=${{matrix.enable_ui}}\
+          -DENABLE_UI=${{ matrix.enable_ui }} \
 
           -DENABLE_CCACHE=$enable_ccache \
 
@@ -104,22 +104,22 @@ jobs:
 
           -DSKIA_LIBRARY=./skia/out/Release-x64/skia.lib
 
-    -名称：编译
+    - name: Compiling
 
-      外壳： bash
+      shell: bash
 
-      运行：|
+      run: |
 
-        CD 构建 && 忍者
+        cd build && ninja
 
-    -使用： actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v3
 
-      与：
+      with:
 
-        名称：阿赛普瑞特
+        name: aseprite
 
-        路径：|
+        path: |
 
           D:/a/aseprite/aseprite/build/bin/data
 
-          D:/a/aseprite/aseprite/build/bin/aseprite.exe 作者：独立游戏杂货铺 https://www.bilibili.com/read/cv27083106/ 出处：bilibili
+          D:/a/aseprite/aseprite/build/bin/aseprite.exe 
